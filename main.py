@@ -35,5 +35,10 @@ def main():
     # -------------------
 
 
+
+    database.commit()
+    database.close()
+
+
 if __name__ == '__main__':
     main()
