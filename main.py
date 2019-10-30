@@ -2,7 +2,7 @@ import sqlite3
 import sys
 
 def main():
-    """ Contains to database and other modules."""
+    """ Connects to database and other modules."""
     pass
 
 
