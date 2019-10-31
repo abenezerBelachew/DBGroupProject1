@@ -48,7 +48,14 @@ c = db.cursor()
 
 
 # 1) Contents of all columns for row that match a certain value in 1 column
-c.execute("SELECT * FROM users;")
+credential = {}
+c.execute("SELECT uid, pwd FROM users;")
 all_rows = c.fetchall()
 for row in all_rows: 
-    print(row)
+    print(row[0], row[1])
+    # print(f"UN: {row[0]} PW:{row[1]}")
+    # credential[row[0]] = row[1]
+
+# for uname, pw in credential.items():
+#     print(uname, " ", pw)
+
