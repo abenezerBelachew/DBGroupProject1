@@ -5,6 +5,7 @@ import queries as q
 from datetime import datetime
 from os import path
 from random import randrange
+import getpass
 
 
 login_credentials = {}
@@ -21,7 +22,7 @@ def login(database):
 
     # Ask user for uid and pwd
     uid = str(input("Your uid: "))
-    pwd = str(input("Your password: "))
+    pwd = getpass.getpass(prompt="Your Password: ")
 
 
     if uid in login_credentials.keys():

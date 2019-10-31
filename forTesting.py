@@ -3,6 +3,7 @@ import sys
 from random import randrange
 from datetime import datetime
 import program_messages as pm
+import getpass
 help_commands = ["RegBir to Register a Birth", 
             "RegMar to Register a Marriage",
             "RenVeh to Renew a vehicle",
@@ -90,3 +91,7 @@ def q():
         print("P true")
 
 q()
+
+password = getpass.getpass(prompt="Password: ")
+print(password)
+print(type(password))
