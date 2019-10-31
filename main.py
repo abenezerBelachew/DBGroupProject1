@@ -62,7 +62,7 @@ def register_birth(database, user):
     
 
     try:
-        c.execute("SELECT phone, address FROM persons p JOIN births b ON (p.fname, p.lname) = (b.m_fname, b.m_lname) WHERE m_fname = ? AND m_lname = ?", (m_fname, m_lname, ))
+        c.execute(q.get_phone_address, (m_fname, m_lname, ))
         phone = c.fetchone()[0]
         address = c.fetchone()[1]
     except:
@@ -72,8 +72,8 @@ def register_birth(database, user):
     reg_birth_data = [regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname]
     person_data = [fname, lname, birth_date, birth_place, address, phone]
 
-    c.execute("INSERT INTO births VALUES (?,?,?,?,?,?,?,?,?,?)", reg_birth_data)
-    c.execute("INSERT INTO persons VALUES (?,?,?,?,?,?)", person_data)
+    c.execute(q.insert_into_births, reg_birth_data)
+    c.execute(q.insert_into_persons, person_data)
     
     # TODO: If parents not in db, system should get fn, ln, bd, bp, address, phone
     
