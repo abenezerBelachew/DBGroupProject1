@@ -31,3 +31,5 @@ try_again = "Try again.."
 password_incorrect = "Password Incorrect."
 uid_not_exist = "Uid does not exist in database."
 logged_in = "You're logged in."
+
+register_birth = "Register a birth"
