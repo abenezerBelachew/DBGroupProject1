@@ -11,7 +11,7 @@
 
 ### System Functionalities
 - [x] Login Screen
-- [ ] Register a birth
+- [x] Register a birth
 - [ ] Register a marriage
 - [ ] Renew a vehicle registration
 - [ ] Process a bill of sale
