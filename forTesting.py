@@ -1,5 +1,7 @@
 import sqlite3
 import sys
+from random import randrange
+from datetime import datetime
 import program_messages as pm
 help_commands = ["RegBir to Register a Birth", 
             "RegMar to Register a Marriage",
@@ -59,3 +61,8 @@ for row in all_rows:
 # for uname, pw in credential.items():
 #     print(uname, " ", pw)
 
+print(datetime.today().strftime('%Y-%m-%d'))
+print(type(datetime.today().strftime('%Y-%m-%d')))
+
+
+print(randrange(1001, 9899))

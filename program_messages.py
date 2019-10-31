@@ -11,9 +11,10 @@ help_commands = ["RegBir to Register a Birth",
             "CarOwn to Find a car owner",
             "Help to see available commands",
             "Quit to quit",]
-lst_of_commands = ["RegBir", "RegMar", "RenVeh", "ProBil",
+lst_of_commands = ["REGBIR", "RegMar", "RenVeh", "ProBil",
                     "ProPay", "DriAbs", "IsuTic", "CarOwn",
-                    "help", "quit"]
+                    "HELP", "QUIT"]
+invalid_command = "Please type in a valid command."
 
 # Database related
 db_not_found = "Database not found. Make sure you typed it correctly."
@@ -28,4 +29,5 @@ try_again = "Try again.."
 
 # Login
 password_incorrect = "Password Incorrect."
-uid_not_exist = "Uid doesn't exist."
+uid_not_exist = "Uid does not exist in database."
+logged_in = "You're logged in."
