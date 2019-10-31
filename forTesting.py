@@ -53,6 +53,12 @@ c = db.cursor()
 credential = {}
 c.execute("SELECT uid, pwd FROM users;")
 all_rows = c.fetchall()
+c.execute("SELECT city FROM users WHERE uid =?", ('user1', ))
+city  = c.fetchone()[0]
+print(city)
+print(type((city)), end = "\n\n\n")
+
+
 for row in all_rows: 
     print(row[0], row[1])
     # print(f"UN: {row[0]} PW:{row[1]}")
@@ -61,8 +67,26 @@ for row in all_rows:
 # for uname, pw in credential.items():
 #     print(uname, " ", pw)
 
-print(datetime.today().strftime('%Y-%m-%d'))
-print(type(datetime.today().strftime('%Y-%m-%d')))
+
+c.execute("SELECT p.phone, p.address, b.m_fname, b.m_lname FROM persons p JOIN births b ON (p.fname, p.lname) = (b.m_fname, b.m_lname) WHERE m_fname = ? AND m_lname = ?", ("Linda", "Smith",))
+pho_add = c.fetchone()
+print(type(pho_add[0]))
+# for pa in pho_add:
+#     print(pa)
+#     print(f"phone: {pa[0]}|||||||||address: {pa[1]}|||||||||m_fname: {pa[2]}|||||||||m_lname: {pa[3]}")
+
+# print(datetime.today().strftime('%Y-%m-%d'))
+# print(type(datetime.today().strftime('%Y-%m-%d')))
 
 
-print(randrange(1001, 9899))
+# print(type(randrange(1001, 9899)))
+
+def p():
+    return (True, "user")
+
+def q():
+    print(p()[1])
+    if p()[0]:
+        print("P true")
+
+q()
