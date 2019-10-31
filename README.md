@@ -10,7 +10,7 @@
 ## Specification
 
 ### System Functionalities
-- [checkbox:checked] Login Screen
+- [x] Login Screen
 - [ ] Register a birth
 - [ ] Register a marriage
 - [ ] Renew a vehicle registration
