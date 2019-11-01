@@ -26,7 +26,7 @@
 - [ ] String matching
 - [ ] Error checking
 - [ ] Counter SQL injection attacks
-- [ ] Non-visible password when typing
+- [x] Non-visible password when typing
 
 
 
