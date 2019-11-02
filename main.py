@@ -101,7 +101,7 @@ def register_marriage(database, user):
     p2_lname = str(input("Person 2 Last Name: "))
 
     # If partner is not found in the database, add them
-    c.execute('SELECT fname, lname FROM persons WHERE fname = ? AND lname = ?', (p1_fname, p1_lname))
+    c.execute(q.get_first_last_name, (p1_fname, p1_lname))
     result = c.fetchall()
     # if person1 doesn't exist in the persons database 
     if len(result) == 0:
@@ -119,7 +119,7 @@ def register_marriage(database, user):
         c.execute(q.insert_into_persons, person1_data)
         
     
-    c.execute('SELECT fname, lname FROM persons WHERE fname = ? AND lname = ?', (p2_fname, p2_lname))
+    c.execute(q.get_first_last_name, (p2_fname, p2_lname))
     result = c.fetchall()
     if len(result) == 0:
         # ask the additional questions here
@@ -137,7 +137,7 @@ def register_marriage(database, user):
     
     
     # Insert into marriages
-    c.execute("INSERT INTO marriages VALUES (?,?,?,?,?,?,?)", (regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname))    
+    c.execute(q.insert_into_marriages, (regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname))    
 
 
 
