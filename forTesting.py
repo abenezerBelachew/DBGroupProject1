@@ -82,16 +82,20 @@ print(type(pho_add[0]))
 
 # print(type(randrange(1001, 9899)))
 
-def p():
-    return (True, "user")
+# def p():
+#     return (True, "user")
 
-def q():
-    print(p()[1])
-    if p()[0]:
-        print("P true")
+# def q():
+#     print(p()[1])
+#     if p()[0]:
+#         print("P true")
 
-q()
+# q()
 
-password = getpass.getpass(prompt="Password: ")
-print(password)
-print(type(password))
+# password = getpass.getpass(prompt="Password: ")
+# print(password)
+# print(type(password)
+c.execute('SELECT fname, lname FROM persons WHERE fname = "Davoo" AND lname = "Rafii"')
+result = c.fetchall()
+print(len(result) == 0)
+

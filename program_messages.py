@@ -11,7 +11,7 @@ help_commands = ["RegBir to Register a Birth",
             "CarOwn to Find a car owner",
             "Help to see available commands",
             "Quit to quit",]
-lst_of_commands = ["REGBIR", "RegMar", "RenVeh", "ProBil",
+lst_of_commands = ["REGBIR", "REGMAR", "RenVeh", "ProBil",
                     "ProPay", "DriAbs", "IsuTic", "CarOwn",
                     "HELP", "QUIT"]
 invalid_command = "Please type in a valid command."
@@ -32,4 +32,9 @@ password_incorrect = "Password Incorrect."
 uid_not_exist = "Uid does not exist in database."
 logged_in = "You're logged in."
 
-register_birth = "Register a birth"
+# birth
+register_birth = "\n----------------------\nRegister a birth\n----------------------\n"
+
+
+# Marriage
+register_marriage = "\n----------------------\nRegister a Marriage\n----------------------\n"

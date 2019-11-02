@@ -53,14 +53,12 @@ def register_birth(database, user):
     m_lname = str(input("Mother's Last Name: "))
     regdate = datetime.today().strftime('%Y-%m-%d')
 
-    print("User: ", user)
+    # print("User: ", user)
     c = database.cursor()
-    c.execute("SELECT city FROM users WHERE uid=?", (user,))
+    c.execute(q.get_user_city, (user,))
     user_city = c.fetchone()
     city = user_city[0]
     regplace = city
-
-    
 
     try:
         c.execute(q.get_phone_address, (m_fname, m_lname, ))
@@ -78,7 +76,68 @@ def register_birth(database, user):
     
     # TODO: If parents not in db, system should get fn, ln, bd, bp, address, phone
     
+
+
+def register_marriage(database, user):
+    """
+    The user should be able to provide the names of the partners and the system should assign the registration 
+    date and place and a unique registration number as discussed in registering a birth. If any of the partners
+    is not found in the database, the system should get information about the partner including first name,
+    last name, birth date, birth place, address and phone. For each partner, any column other than the first name
+    and last name can be null if it is not provided.
+    """
+    regno = randrange(1001, 9867699)
+    regdate = datetime.today().strftime('%Y-%m-%d')
     
+    c = database.cursor()
+    c.execute(q.get_user_city, (user,))
+    user_city = c.fetchone()
+    city = user_city[0]
+    regplace = city
+
+    p1_fname = str(input("Person 1 First Name: "))
+    p1_lname = str(input("Person 1 Last Name: "))
+    p2_fname = str(input("Person 2 First Name: "))
+    p2_lname = str(input("Person 2 Last Name: "))
+
+    # If partner is not found in the database, add them
+    c.execute('SELECT fname, lname FROM persons WHERE fname = ? AND lname = ?', (p1_fname, p1_lname))
+    result = c.fetchall()
+    # if person1 doesn't exist in the persons database 
+    if len(result) == 0:
+        # ask the additional questions here
+        print("Please add information for person 1 to persons table by answering the ff questions.")
+        fname = str(input("First Name: "))
+        lname = str(input("Last Name: "))
+        bdate = str(input("Birth Date(YYYY-MM-DD): "))
+        bplace = str(input("Birth Place: "))
+        address = str(input("Address: "))
+        phone = str(input("Phone(XXX-XXX-XXXX): "))
+        person1_data = [fname, lname, bdate, bplace, address, phone]
+
+        # Insert into persons table
+        c.execute(q.insert_into_persons, person1_data)
+        
+    
+    c.execute('SELECT fname, lname FROM persons WHERE fname = ? AND lname = ?', (p2_fname, p2_lname))
+    result = c.fetchall()
+    if len(result) == 0:
+        # ask the additional questions here
+        print("Please add information for person 2 to persons table by answering the ff questions.")
+        fname = str(input("First Name: "))
+        lname = str(input("Last Name: "))
+        bdate = str(input("Birth Date(YYYY-MM-DD): "))
+        bplace = str(input("Birth Place: "))
+        address = str(input("Address: "))
+        phone = str(input("Phone(XXX-XXX-XXXX): "))
+        person2_data = [fname, lname, bdate, bplace, address, phone]
+
+        # Insert into persons table
+        c.execute(q.insert_into_persons, person2_data)
+    
+    
+    # Insert into marriages
+    c.execute("INSERT INTO marriages VALUES (?,?,?,?,?,?,?)", (regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname))    
 
 
 
@@ -131,6 +190,10 @@ def main():
             # for registering birth
             print(pm.register_birth)
             register_birth(database, active_user)
+        
+        elif command == "REGMAR":
+            print(pm.register_marriage)
+            register_marriage(database, active_user)
 
     else:
         print("Not logged in.")    
