@@ -75,7 +75,7 @@ def register_birth(database, user):
     c.execute(q.insert_into_persons, person_data)
     
     # TODO: If parents not in db, system should get fn, ln, bd, bp, address, phone
-    
+    print(pm.all_done)
 
 
 def register_marriage(database, user):
@@ -138,7 +138,7 @@ def register_marriage(database, user):
     
     # Insert into marriages
     c.execute(q.insert_into_marriages, (regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname))    
-
+    print(pm.all_done)
 
 
 def get_database():

@@ -25,6 +25,7 @@ provide_db_name = "Please provide a database name."
 quit_message = "Closing everything..bye"
 something_went_wrong = "Something went wrong"
 try_again = "Try again.."
+all_done = "\n**********\nAll Done :)\n**********\n"
 
 
 # Login
