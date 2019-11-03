@@ -12,7 +12,7 @@ help_commands = ["RegBir to Register a Birth",
             "Help to see available commands",
             "Quit to quit",]
 lst_of_commands = ["REGBIR", "REGMAR", "RENVEH", "ProBil",
-                    "ProPay", "DriAbs", "IsuTic", "CarOwn",
+                    "PROPAY", "DriAbs", "ISUTIC", "CarOwn",
                     "HELP", "QUIT"]
 invalid_command = "Please type in a valid command."
 
@@ -43,3 +43,7 @@ register_marriage = "\n----------------------\nRegister a Marriage\n------------
 # Registrations
 renew_registration = "\n----------------------\nRenew Registration\n----------------------\n"
 reg_num_not_in_db = "\n----------------------\nRegistration number not in database\n----------------------\n"
+
+
+# Officers
+for_officers_only = "Access Denied! Sorry, this feature is for officers only."

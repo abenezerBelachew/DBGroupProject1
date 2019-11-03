@@ -149,3 +149,8 @@ print(the_date2 < the_date_in_string)
 print(type(reg_dict[302]))
 
 
+c = db.cursor()
+c.execute("SELECT utype FROM users WHERE uid = 'user1'")
+result = c.fetchone()
+
+print(result[0] == 'a')

@@ -32,6 +32,7 @@ def login(database):
             return (True, uid)
         else:
             print(pm.password_incorrect)
+            sys.exit()
     else:
         # TODO: Allow user to try again
         print(pm.uid_not_exist)
@@ -202,6 +203,69 @@ def add_years(d, years):
     except ValueError:
         return d + (date(d.year + years, 3, 1) - date(d.year, 3, 1))
 
+def process_payment(database, user):
+    """
+    Process a payment.The user should be able to record a payment by entering a valid ticket number 
+    and an amount. The payment date is automatically set to the day of the payment (today's date).
+    A ticket can be paid in multiple payments but the sum of those payments cannot exceed the fine
+    amount of the ticket.
+    """
+    tno = int(input("Ticket Number: "))
+    amount = int(input("Amount: "))
+    payment_date = datetime.today().strftime('%Y-%m-%d') # today
+
+
+def issue_ticket(database, user):
+    """ 
+    Issue a ticket.The user should be able to provide a registration number and see the person name
+    that is listed in the registration and the make, model, year and color of the car registered. 
+    Then the user should be able to proceed and ticket the registration by providing a violation date,
+    a violation text and a fine amount. A unique ticket number should be assigned automatically and
+    the ticket should be recorded. The violation date should be set to today's date if it is not 
+    provided.
+    """
+    
+    # check if user is an officer
+    c = database.cursor()
+    c.execute('SELECT utype FROM users WHERE uid = ?', (user, ))
+    user_type = c.fetchone()[0]
+
+    # If user is an officer 
+    if user_type == 'o':
+        reg_num = int(input("Registration number: "))
+        c.execute("""SELECT p.fname, p.lname, v.make, v.model, v.year, v.color FROM registrations r JOIN
+         persons p ON (r.fname, r.lname) = (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE r.regno = ?""",(reg_num,))
+        result = c.fetchone()
+        fname = result[0]
+        lname = result[1]
+        make = result[2]
+        model = result[3]
+        year = result[4]
+        color = result[5]
+        print("\n--------------------------\nInformation\n--------------------------\n")
+        print("First Name: ", fname)
+        print("Last Name: ", lname)
+        print("Make: ", make)
+        print("Model: ", model)
+        print("Year: ", year)
+        print("Color: ", color)
+
+        print("\n-------------------------\nTicket the registra: \n------------------------\n")
+        violation_date = str(input("Violation Date: ")) # if not provided, today's date
+        if violation_date == "":
+            violation_date = datetime.today().strftime('%Y-%m-%d')
+        violation_text = str(input("violation Text: "))
+        amount = str(input("Amount: "))
+        tno = randrange(1001, 9867699)
+
+        c.execute(q.insert_into_tickets, (tno, reg_num, amount, violation_text, violation_date))
+
+        database.commit()
+        print(pm.all_done)
+    # if user is not an officer
+    else:
+        print(pm.for_officers_only)
+
 
 def get_database():
     # Checks if there is an argument provided
@@ -259,6 +323,12 @@ def main():
         
         elif command == "RENVEH":
             renew_registration(database, active_user)
+        
+        elif command == "PROPAY":
+            process_payment(database, active_user)
+
+        elif command == "ISUTIC":
+            issue_ticket(database, active_user)
 
     else:
         print("Not logged in.")    
