@@ -19,7 +19,7 @@
 - [ ] Get a driver abstract
 
 ### Traffic officers
-- [ ] Issue a ticket
+- [x] Issue a ticket
 - [ ] Find a car owner
 
 ### General
