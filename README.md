@@ -12,7 +12,7 @@
 ### System Functionalities
 - [x] Login Screen
 - [x] Register a birth
-- [ ] Register a marriage
+- [x] Register a marriage
 - [ ] Renew a vehicle registration
 - [ ] Process a bill of sale
 - [ ] Process Payment
