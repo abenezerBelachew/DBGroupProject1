@@ -12,7 +12,7 @@ help_commands = ["RegBir to Register a Birth",
             "Help to see available commands",
             "Quit to quit",]
 lst_of_commands = ["REGBIR", "REGMAR", "RENVEH", "ProBil",
-                    "PROPAY", "DriAbs", "ISUTIC", "CarOwn",
+                    "PROPAY", "DriAbs", "ISUTIC", "CAROWN",
                     "HELP", "QUIT"]
 invalid_command = "Please type in a valid command."
 
@@ -47,3 +47,6 @@ reg_num_not_in_db = "\n----------------------\nRegistration number not in databa
 
 # Officers
 for_officers_only = "Access Denied! Sorry, this feature is for officers only."
+
+# carown
+car_own = "\n----------------------\nFind owner of a car\n----------------------\n"

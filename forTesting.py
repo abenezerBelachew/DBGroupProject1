@@ -154,3 +154,11 @@ c.execute("SELECT utype FROM users WHERE uid = 'user1'")
 result = c.fetchone()
 
 print(result[0] == 'a')
+
+c.execute("""SELECT DISTINCT p.fname, p.lname FROM persons p JOIN registrations r ON (r.fname, r.lname) = 
+    (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE v.make = ? OR v.model = ? OR v.year = ? OR v.color = ?
+    OR r.plate = ?""", ("101", "Doge", 1969, "red", "plate3"))
+
+result = c.fetchall()
+print(result, "Length: ", len(result))
+print(result[0])

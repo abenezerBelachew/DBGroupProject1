@@ -266,6 +266,68 @@ def issue_ticket(database, user):
     else:
         print(pm.for_officers_only)
 
+def find_car_owner(database, user):
+    """
+    Find a car owner.The user should be able to look for the owner of a car by providing one or more of 
+    make, model, year, color, and plate. The system should find and return all matches. If there are more
+    than 4 matches, you will show only the make, model, year, color, and the plate of the matching cars 
+    and let the user select one. When there are less than 4 matches or when a car is selected from a list
+    shown earlier, for each match, the make, model, year, color, and the plate of the matching car will
+    be shown as well as the latest registration date, the expiry date, and the name of the person listed in
+    the latest registration record.
+    """
+    print(pm.car_own)
+    c = database.cursor()
+
+    make = str(input("Make: "))
+    model = str(input("Model: "))
+    year = int(input("Year: "))
+    color = str(input("Color: "))
+    plate = str(input("Plate: "))
+
+    c.execute("""SELECT DISTINCT p.fname, p.lname FROM persons p JOIN registrations r ON (r.fname, r.lname) = 
+    (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE v.make = ? OR v.model = ? OR v.year = ? OR v.color = ?
+    OR r.plate = ?""", (make, model, year, color, plate))
+    result = c.fetchall()
+
+    if len(result) > 4:
+        c.execute("""SELECT DISTINCT r.fname, r.lname, v.make, v.model, v.year, v.color, r.plate FROM persons p JOIN registrations r
+        ON (r.fname, r.lname) = (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE v.make = ? OR v.model = ? OR
+        v.year = ? OR v.color = ? OR r.plate = ?""", (make, model, year, color, plate))
+        result = c.fetchall()
+        for values in result:
+            print("\n-----------------------------------------")
+            print(f"Full Name: {values[0]} {values[1]}")
+            print("------------------------------------------")
+            print(f"Make: {values[2]}")
+            print(f"Model: {values[3]}")
+            print(f"Year: {values[4]}")
+            print(f"Color: {values[5]}")
+            print(f"Plate: {values[6]}")
+    elif len(result) <= 4:
+        c.execute("""SELECT DISTINCT r.fname, r.lname, v.make, v.model, v.year, v.color, r.plate, r.regdate, r.expiry FROM persons p JOIN registrations r
+        ON (r.fname, r.lname) = (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE v.make = ? OR v.model = ? OR
+        v.year = ? OR v.color = ? OR r.plate = ?""", (make, model, year, color, plate))
+        result = c.fetchall()
+        for values in result:
+            print("\n-----------------------------------------")
+            print(f"Full Name: {values[0]} {values[1]}")
+            print("------------------------------------------")
+            print(f"Make: {values[2]}")
+            print(f"Model: {values[3]}")
+            print(f"Year: {values[4]}")
+            print(f"Color: {values[5]}")
+            print(f"Plate: {values[6]}")
+            print(f'Registration Date: {values[7]}')
+            print(f"Expiry: {values[8]}")
+    
+
+    print(pm.all_done)
+            
+            
+
+    
+
 
 def get_database():
     # Checks if there is an argument provided
@@ -330,6 +392,8 @@ def main():
         elif command == "ISUTIC":
             issue_ticket(database, active_user)
 
+        elif command == "CAROWN":
+            find_car_owner(database, active_user)
     else:
         print("Not logged in.")    
 
