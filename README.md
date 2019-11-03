@@ -20,10 +20,10 @@
 
 ### Traffic officers
 - [x] Issue a ticket
-- [ ] Find a car owner
+- [x] Find a car owner
 
 ### General
-- [ ] String matching
+- [x] String matching
 - [ ] Error checking
 - [ ] Counter SQL injection attacks
 - [x] Non-visible password when typing
