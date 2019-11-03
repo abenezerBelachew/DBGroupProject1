@@ -20,7 +20,7 @@
 
 ### Traffic officers
 - [x] Issue a ticket
-- [ ] Find a car owner
+- [x] Find a car owner
 
 ### General
 - [ ] String matching
