@@ -6,5 +6,8 @@ insert_into_births = "INSERT INTO births VALUES (?,?,?,?,?,?,?,?,?,?)"
 insert_into_persons = "INSERT INTO persons VALUES (?,?,?,?,?,?)"
 insert_into_marriages = "INSERT INTO marriages VALUES (?,?,?,?,?,?,?)"
 get_first_last_name = 'SELECT fname, lname FROM persons WHERE fname = ? AND lname = ?'
+get_reg_num_date = 'SELECT regno, regdate FROM registrations'
 
 get_phone_address = "SELECT phone, address FROM persons p JOIN births b ON (p.fname, p.lname) = (b.m_fname, b.m_lname) WHERE m_fname = ? AND m_lname = ?"
+
+update_expiry = 'UPDATE registrations SET expiry = ? WHERE regno = ?'

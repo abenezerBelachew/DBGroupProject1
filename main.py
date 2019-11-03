@@ -2,7 +2,7 @@ import sqlite3
 import sys
 import program_messages as pm
 import queries as q
-from datetime import datetime
+from datetime import datetime, date
 from os import path
 from random import randrange
 import getpass
@@ -75,6 +75,7 @@ def register_birth(database, user):
     c.execute(q.insert_into_persons, person_data)
     
     # TODO: If parents not in db, system should get fn, ln, bd, bp, address, phone
+    database.commit()
     print(pm.all_done)
 
 
@@ -141,6 +142,67 @@ def register_marriage(database, user):
     print(pm.all_done)
 
 
+def renew_registration(database, user):
+    """
+    Renew a vehicle registration.The user should be able to provide an existing registration number and 
+    renew the registration. The system should set the new expiry date to one year from today's date if 
+    the current registration either has expired or expires today. Otherwise, the system should set the
+     new expiry to one year after the current expiry date.
+    """
+    print(pm.renew_registration)
+
+    c = database.cursor()
+    c.execute(q.get_reg_num_date)
+    reg_num_date = c.fetchall()
+    
+    # contains the registration number as keys and date as values
+    registration_dict = {}
+    for num_date in reg_num_date:
+        registration_dict[num_date[0]] = num_date[1]
+
+    reg_number = str(input("Existing registration number: "))
+    # check if reg_number exists in the database
+    if int(reg_number) in registration_dict.keys():
+        are_you_sure = str(input("Are you sure you want to renew your registration? (Y/N) ")).upper()
+        if are_you_sure == 'Y':
+            # The system should set the new expiry date to one year from today's date if 
+            # the current registration either has expired or expires today. Otherwise, the system should set the
+            # new expiry to one year after the current expiry date.
+            the_date = datetime.today().strftime('%Y-%m-%d') # 2019-11-02 str
+            todays_date = datetime.strptime(the_date, '%Y-%m-%d') # 2019-11-02 00:00:00 datetime.datetime
+            # print(registration_dict[int(reg_number)])
+            current_expiry = datetime.strptime(registration_dict[int(reg_number)], '%Y-%m-%d')
+
+            # if the current expiry has passed or is today
+            if  current_expiry <= todays_date:
+                c.execute(q.update_expiry, (add_years(todays_date, 1).strftime('%Y-%m-%d'), reg_number))
+
+            else:
+                c.execute(q.update_expiry, (add_years(current_expiry, 1).strftime('%Y-%m-%d'), reg_number))
+        else:
+            print('OK, closing down.')
+            sys.exit()
+    else:
+        # registration number not in database
+        print(pm.reg_num_not_in_db)
+
+    print(pm.all_done)
+    database.commit()
+
+def add_years(d, years):
+    """Return a date that's `years` years after the date (or datetime)
+    object `d`. Return the same calendar date (month and day) in the
+    destination year, if it exists, otherwise use the following day
+    (thus changing February 29 to March 1).
+    Source: https://stackoverflow.com/questions/15741618/add-one-year-in-current-date-python
+
+    """
+    try:
+        return d.replace(year = d.year + years)
+    except ValueError:
+        return d + (date(d.year + years, 3, 1) - date(d.year, 3, 1))
+
+
 def get_database():
     # Checks if there is an argument provided
     if len(sys.argv) > 1:
@@ -194,6 +256,9 @@ def main():
         elif command == "REGMAR":
             print(pm.register_marriage)
             register_marriage(database, active_user)
+        
+        elif command == "RENVEH":
+            renew_registration(database, active_user)
 
     else:
         print("Not logged in.")    

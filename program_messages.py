@@ -11,7 +11,7 @@ help_commands = ["RegBir to Register a Birth",
             "CarOwn to Find a car owner",
             "Help to see available commands",
             "Quit to quit",]
-lst_of_commands = ["REGBIR", "REGMAR", "RenVeh", "ProBil",
+lst_of_commands = ["REGBIR", "REGMAR", "RENVEH", "ProBil",
                     "ProPay", "DriAbs", "IsuTic", "CarOwn",
                     "HELP", "QUIT"]
 invalid_command = "Please type in a valid command."
@@ -25,7 +25,7 @@ provide_db_name = "Please provide a database name."
 quit_message = "Closing everything..bye"
 something_went_wrong = "Something went wrong"
 try_again = "Try again.."
-all_done = "\n**********\nAll Done :)\n**********\n"
+all_done = "\n****************\nAll Done :)\n****************\n"
 
 
 # Login
@@ -39,3 +39,7 @@ register_birth = "\n----------------------\nRegister a birth\n------------------
 
 # Marriage
 register_marriage = "\n----------------------\nRegister a Marriage\n----------------------\n"
+
+# Registrations
+renew_registration = "\n----------------------\nRenew Registration\n----------------------\n"
+reg_num_not_in_db = "\n----------------------\nRegistration number not in database\n----------------------\n"

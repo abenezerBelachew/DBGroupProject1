@@ -1,7 +1,7 @@
 import sqlite3
 import sys
 from random import randrange
-from datetime import datetime
+from datetime import datetime, date
 import program_messages as pm
 import getpass
 help_commands = ["RegBir to Register a Birth", 
@@ -98,4 +98,54 @@ print(type(pho_add[0]))
 c.execute('SELECT fname, lname FROM persons WHERE fname = "Davoo" AND lname = "Rafii"')
 result = c.fetchall()
 print(len(result) == 0)
+
+c.execute('select regno, regdate from registrations')
+result = c.fetchall()
+# print(result)
+
+reg_dict = {}
+for i in result:
+    reg_dict[i[0]] = i[1]
+    # print(type(i[1]))
+print(reg_dict.keys())
+print(1006 in reg_dict.keys())
+print(reg_dict.values())
+
+try:
+    c.execute('UPDATE registrations SET expiry = "1968-08-05" WHERE regno = 300')
+except:
+    print("Not working")
+
+db.commit()
+
+def add_years(d, years):
+    """Return a date that's `years` years after the date (or datetime)
+    object `d`. Return the same calendar date (month and day) in the
+    destination year, if it exists, otherwise use the following day
+    (thus changing February 29 to March 1).
+
+    """
+    try:
+        return d.replace(year = d.year + years)
+    except ValueError:
+        return d + (date(d.year + years, 3, 1) - date(d.year, 3, 1))
+
+the_date = datetime.today().strftime('%Y-%m-%d')
+print("The date (strftime): ", the_date)
+print(type(the_date))
+the_date2 = datetime.strptime(the_date, '%Y-%m-%d')
+print(f"The strptime (of the_date): {the_date2} and the type is {type(the_date2)}")
+the_date_in_string = the_date2.strftime('%Y-%m-%d')
+ 
+# print(the_date2 >= the_date2)
+
+the_date_in_string = add_years(the_date2, -1)
+print("Add years applied: ", the_date_in_string)
+print(type(the_date_in_string))
+
+# print(datetime.strptime(datetime.today(), "%Y-%m-%d"))
+print(the_date2 < the_date_in_string)
+
+print(type(reg_dict[302]))
+
 
