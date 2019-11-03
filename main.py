@@ -39,9 +39,17 @@ def login(database):
     
 
 def register_birth(database, user):
-    """The agent should be able to register a birth by providing the first name, the last name, 
-    the gender, the birth date, the birth place of the newborn, as well as the first and last 
-    names of the parents."""
+    """
+    Register a birth.The agent should be able to register a birth by providing the first name, the last name, 
+    the gender, the birth date, the birth place of the newborn, as well as the first and last names of the parents.
+     The registration date is set to the day of registration (today's date) and the registration place is set to
+    the city of the user. The system should automatically assign a unique registration number to the birth record.
+    The address and the phone of the newborn are set to those of the mother. If any of the parents is not in the
+    database, the system should get information about the parent including first name, last name, birth date,
+    birth place, address and phone. For each parent, any column other than the first name and last name can be 
+    null if it is not provided.
+    """
+    c = database.cursor()
     regno = randrange(1001, 9867699)
     fname = str(input("First Name: "))
     lname = str(input("Last Name: "))
@@ -54,20 +62,53 @@ def register_birth(database, user):
     m_lname = str(input("Mother's Last Name: "))
     regdate = datetime.today().strftime('%Y-%m-%d')
 
+
+    # TODO: If parents not in db, system should get fn, ln, bd, bp, address, phone
+    # check if father is in persons
+    c.execute("SELECT fname, lname FROM persons WHERE fname = ? AND lname = ?", (f_fname, f_lname))
+    father = c.fetchall()
+    if len(father) == 0:
+         print("It appears that your father is not in the database.")
+         bdate = str(input("Father's Birth Date (YYYY-MM-DD): "))
+         bplace = str(input("Father's Birth Place: "))
+         address = str(input("Father's Address: "))
+         phone = str(input("Father's Phone: "))
+
+         # insert into database
+         c.execute(q.insert_into_persons, (f_fname, f_lname, bdate, bplace, address, phone))
+
+         database.commit()
+
+    # check if mother is in persons
+    c.execute("SELECT fname, lname FROM persons WHERE fname = ? AND lname = ?", (m_fname, m_lname))
+    mother = c.fetchall()
+    if len(mother) == 0:
+         print("It appears that your mother is not in the database.")
+         bdate = str(input("Mother's Birth Date (YYYY-MM-DD): "))
+         bplace = str(input("Mother's Birth Place: "))
+         address = str(input("Mother's Address: "))
+         phone = str(input("Mother's Phone: "))
+
+        # insert into database
+         c.execute(q.insert_into_persons, (m_fname, m_lname, bdate, bplace, address, phone))
+
+         database.commit()
+
     # print("User: ", user)
-    c = database.cursor()
+    
     c.execute(q.get_user_city, (user,))
     user_city = c.fetchone()
     city = user_city[0]
     regplace = city
 
-    try:
-        c.execute(q.get_phone_address, (m_fname, m_lname, ))
-        phone = c.fetchone()[0]
-        address = c.fetchone()[1]
-    except:
-        print(pm.something_went_wrong)
-        sys.exit()
+    # try:
+    c.execute("SELECT phone, address FROM persons WHERE fname = ? AND lname = ?", (m_fname, m_lname))
+    result = c.fetchone()
+    phone = result[0]
+    address = result[1]
+    # except:
+    #     print(pm.something_went_wrong, "This one")
+    #     sys.exit()
     
     reg_birth_data = [regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname]
     person_data = [fname, lname, birth_date, birth_place, address, phone]
@@ -75,7 +116,9 @@ def register_birth(database, user):
     c.execute(q.insert_into_births, reg_birth_data)
     c.execute(q.insert_into_persons, person_data)
     
-    # TODO: If parents not in db, system should get fn, ln, bd, bp, address, phone
+     
+
+
     database.commit()
     print(pm.all_done)
 
