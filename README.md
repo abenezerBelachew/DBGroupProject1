@@ -13,7 +13,7 @@
 - [x] Login Screen
 - [x] Register a birth
 - [x] Register a marriage
-- [ ] Renew a vehicle registration
+- [x] Renew a vehicle registration
 - [ ] Process a bill of sale
 - [ ] Process Payment
 - [ ] Get a driver abstract
