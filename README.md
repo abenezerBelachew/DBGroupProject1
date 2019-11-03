@@ -23,7 +23,7 @@
 - [x] Find a car owner
 
 ### General
-- [ ] String matching
+- [x] String matching
 - [ ] Error checking
 - [ ] Counter SQL injection attacks
 - [x] Non-visible password when typing
