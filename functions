@@ -7,22 +7,22 @@ def bill_sale(database, user):
     c_fname = str(input("Current owner's first name': "))
     c_lname = str(input("Current owner's last name: "))
     c = database.cursor()
-    c.execute(q.get_latest_owner,(vin,))
+    c.execute(q.get_latest_owner,(vin,)) # gets the current owner of the vehicle
     name = c.fetchone()
     try:
     
-        if name[0] == c_fname and name[1] == c_lname:
+        if name[0] == c_fname and name[1] == c_lname: #check if name given is the current owner
             
             n_fname = str(input("New owner's first name: "))
             n_lname = str(input("New owner's first name: "))
             plate = str(input('Plate number: '))
-            todaysdate = regdate = datetime.today().strftime('%Y-%m-%d')
-            a_year_after = datetime.today().replace(year= datetime.today().year +1).strftime('%Y-%m-%d')
+            todaysdate = regdate = datetime.today().strftime('%Y-%m-%d')# get expiry date for current and regdate for new
+            a_year_after = datetime.today().replace(year= datetime.today().year +1).strftime('%Y-%m-%d')# gets the expiry date for new registration
         
             c.execute(q.update_current,(todaysdate,name[2]))
             c.execute(q.new_registrations,(regno,todaysdate,a_year_after,plate,vin,n_fname,n_lname))
         else :
-            print(q.not_current_owner)  
+            print(q.not_current_owner) 
     except:
         print(pm.something_went_wrong)
         sys.exit()
@@ -34,15 +34,17 @@ def pro_payments(database, user):
     pdate  = (datetime.today().strftime('%Y-%m-%d'))
 
     c = database.cursor()
-    c.execute(q.get_fine,(str(tno),))
+    c.execute(q.get_fine,(str(tno),)) # gets the fine amount
     fine_amount = c.fetchone()[0]
-    c.execute(q.get_sum,(str(tno),))
+    c.execute(q.get_sum,(str(tno),)) # gets the sum of all previous payments
     payment_sum = c.fetchone()[0]
     try:
         if payment_sum == None:
             payment_sum = 0
-        if amount <=(fine_amount - payment_sum):
+        if amount <=(fine_amount - payment_sum):# if the payment is valid execute
             c.execute(q.insert_payment,(tno,pdate,amount,))
+        else:                                           #else payment is too large
+            print('payment is too large')  
     except:
         print(pm.something_went_wrong)
         sys.exit()
@@ -55,9 +57,9 @@ def get_abstract(database, user):
     try:
         _2yearsago =  datetime.today().replace(datetime.today().year - 2)
         c = database.cursor()
-        c.execute(q.get_demerit,(fname,lname))
+        c.execute(q.get_demerit,(fname,lname)) # gets both number of demereit and sum of demeret points for a lifetime
         nuum = c.fetchone()
-        c.execute(q.get_demerit2,(fname,lname,_2yearsago))
+        c.execute(q.get_demerit2,(fname,lname,_2yearsago)) # gets both number of demereit and sum of demeret points for past 2 years
         nuum2 = c.fetchone()    
         
         option = input("Do you want to order tickets(yes/no):  ")
