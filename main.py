@@ -36,6 +36,7 @@ def login(database):
     else:
         # TODO: Allow user to try again
         print(pm.uid_not_exist)
+        sys.exit()
     
 
 def register_birth(database, user):
@@ -246,16 +247,16 @@ def add_years(d, years):
     except ValueError:
         return d + (date(d.year + years, 3, 1) - date(d.year, 3, 1))
 
-def process_payment(database, user):
-    """
-    Process a payment.The user should be able to record a payment by entering a valid ticket number 
-    and an amount. The payment date is automatically set to the day of the payment (today's date).
-    A ticket can be paid in multiple payments but the sum of those payments cannot exceed the fine
-    amount of the ticket.
-    """
-    tno = int(input("Ticket Number: "))
-    amount = int(input("Amount: "))
-    payment_date = datetime.today().strftime('%Y-%m-%d') # today
+# def process_payment(database, user):
+#     """
+#     Process a payment.The user should be able to record a payment by entering a valid ticket number 
+#     and an amount. The payment date is automatically set to the day of the payment (today's date).
+#     A ticket can be paid in multiple payments but the sum of those payments cannot exceed the fine
+#     amount of the ticket.
+#     """
+#     tno = int(input("Ticket Number: "))
+#     amount = int(input("Amount: "))
+#     payment_date = datetime.today().strftime('%Y-%m-%d') # today
 
 
 def issue_ticket(database, user):
@@ -391,6 +392,134 @@ def get_database():
         print(pm.provide_db_name)
         sys.exit()
 
+
+# Add your functions here
+def bill_sale(database, user):
+    '''The user should be able to record a bill of sale by providing the vin of a car, the name of the current owner, the name of the new owner, and a plate number for the new registration. '''
+    regno = randrange(1001, 9867699)
+    
+    vin = str(input('VIN: '))
+    c_fname = str(input("Current owner's first name': "))
+    c_lname = str(input("Current owner's last name: "))
+    c = database.cursor()
+    c.execute(q.get_latest_owner,(vin,))
+    name = c.fetchone()
+    try:
+    
+        if name[0] == c_fname and name[1] == c_lname:
+            
+            n_fname = str(input("New owner's first name: "))
+            n_lname = str(input("New owner's last name: "))
+            plate = str(input('Plate number: '))
+            todaysdate = regdate = datetime.today().strftime('%Y-%m-%d')
+            a_year_after = datetime.today().replace(year= datetime.today().year +1).strftime('%Y-%m-%d')
+        
+            c.execute(q.update_current,(todaysdate,name[2]))
+            c.execute(q.new_registrations,(regno,todaysdate,a_year_after,plate,vin,n_fname,n_lname))
+        else :
+            print(q.not_current_owner)  
+    except:
+        print(pm.something_went_wrong)
+        sys.exit()
+
+def pro_payments(database, user):
+    '''The user should be able to record a payment by entering a valid ticket number and an amount.'''
+    tno = int(input("Enter a valid ticket number: "))
+    amount = int(input("Enter an amount: "))
+    pdate  = (datetime.today().strftime('%Y-%m-%d'))
+
+    c = database.cursor()
+    c.execute(q.get_fine,(str(tno),))
+    fine_amount = c.fetchone()[0]
+    c.execute(q.get_sum,(str(tno),))
+    payment_sum = c.fetchone()[0]
+    try:
+        if payment_sum == None:
+            payment_sum = 0
+        if amount <=(fine_amount - payment_sum):
+            c.execute(q.insert_payment,(tno,pdate,amount,))
+        
+        else:
+            print("Amount should be less than fine amount.")
+            sys.exit()
+    except:
+        print(pm.something_went_wrong)
+        sys.exit()
+
+        
+def get_abstract(database, user):
+    
+    
+    fname = str(input("Enter driver first name: "))
+    lname = str(input("Enter driver last name: "))
+    try:
+        _2yearsago =  datetime.today().replace(datetime.today().year - 2)
+        c = database.cursor()
+        c.execute(q.get_demerit,(fname,lname))
+        nuum = c.fetchone()
+        c.execute(q.get_demerit2,(fname,lname,_2yearsago))
+        nuum2 = c.fetchone()    
+        
+        option = input("Do you want to order tickets(yes/no):  ")
+        if option.upper() == "YES":
+            get_regno = q.get_regno_ordered
+            get_regnod = q.get_regno_ordered_dis
+        else:
+            get_regno = q.get_regno
+            get_regnod = q.get_regno_dis
+        c.execute(get_regno,(fname,lname))
+        regno = c.fetchall()
+        c.execute(get_regnod,(fname,lname))
+        regnod = c.fetchall()
+    except:
+        print(pm.something_went_wrong)
+    try:
+        tickets = 0 
+        tickets2 = 0
+        ticket_desc = []
+        ticket_desc2 = []
+        for i in regnod:
+            regno1 = str(i[0])
+            c.execute(q.get_tickets,(regno1,))
+            ticketnum = c.fetchone()[0]
+            tickets += ticketnum
+            c.execute(q.get_tickets2,(regno1,_2yearsago))
+            ticketnum2 = c.fetchone()[0]
+            tickets2 += ticketnum2
+            c.execute(q.get_ticket_desc,(regno1,))
+        for  i in regno:
+            regno1 = str(i[0])
+            t_desc = c.fetchone()
+            c.execute(q.get_ticket_desc2,(regno1,_2yearsago))
+            t_desc2 = c.fetchone()
+            
+            
+            ticket_desc.append(t_desc)
+            ticket_desc2.append(t_desc2)
+        low_index=5
+        high_index=9
+        num_of_results = len(ticket_desc)
+       # print(a,'>>>>>>>>>>>>>>>>>>')
+        if num_of_results>5 :
+            pm.printmsg(tickets, nuum,ticket_desc, tickets2, nuum2, ticket_desc2)
+            answer = input("Do you want to see more(yes/no): ")
+            
+            while answer.upper() == "YES" and low_index< num_of_results :
+                print("In lifetime")
+                print(ticket_desc[low_index:high_index])
+                print("In last 2 years")
+                print(ticket_desc2[low_index:high_index])
+                low_index +=5
+                high_index += 5
+                answer = input("Do you want to see more(yes/no): ")
+                
+        else:
+            pm.printmsg(tickets, nuum,ticket_desc, tickets2, nuum2, ticket_desc2)
+    except:
+        print(pm.something_went_wrong)
+        sys.exit()
+        
+
 def main():
     """ Connects to database and other modules."""
     database = get_database()
@@ -429,20 +558,29 @@ def main():
         elif command == "RENVEH":
             renew_registration(database, active_user)
         
+        elif command == "PROBIL":
+            bill_sale(database, active_user)
+        
         elif command == "PROPAY":
-            process_payment(database, active_user)
+            pro_payments(database, active_user)
+        
+        elif command == "DRIABS":
+            get_abstract(database, active_user)
 
         elif command == "ISUTIC":
             issue_ticket(database, active_user)
 
         elif command == "CAROWN":
             find_car_owner(database, active_user)
+
+        elif command == "HELP":
+            print(pm.help_commands)
     else:
         print("Not logged in.")    
 
     # # register birth
     # if active_user != "":
-    #     register_birth(database, active_user)
+    # register_birth(database, active_user)
 
 
     database.commit()

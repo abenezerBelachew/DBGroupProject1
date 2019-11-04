@@ -11,9 +11,9 @@ help_commands = ["RegBir to Register a Birth",
             "CarOwn to Find a car owner",
             "Help to see available commands",
             "Quit to quit",]
-lst_of_commands = ["REGBIR", "REGMAR", "RENVEH", "ProBil",
-                    "PROPAY", "DriAbs", "ISUTIC", "CAROWN",
-                    "HELP", "QUIT"]
+lst_of_commands = ["REGBIR", "REGMAR", "RENVEH", "PROBIL",
+                    "PROPAY", "DRIABS", "ISUTIC", "CAROWN",
+                    "HELP", "QUIT", "ARTHURIT"]
 invalid_command = "Please type in a valid command."
 
 # Database related
@@ -50,3 +50,25 @@ for_officers_only = "Access Denied! Sorry, this feature is for officers only."
 
 # carown
 car_own = "\n----------------------\nFind owner of a car\n----------------------\n"
+
+
+# arthur
+process_bill = 'Processing bill of sale'
+process_pay = "Processing payment"
+driverabstract = "Getting driver abstract"
+def printmsg(tickets, nuum,ticket_desc, tickets2, nuum2, ticket_desc2):
+    print("In drivers lifetime")
+    print("# of Tickets =",tickets)
+    print("# of notices =", nuum[0])
+    print("sum of points = ",nuum[1])
+    print("The ticket number,violation date, violation description, fine,registration number,make,model")
+    print(*ticket_desc, sep = '\n')
+    
+    print("In the last 2 years")
+    print("# of Tickets =",tickets2)
+    print("# of notices =", nuum2[0])
+    print("sum of points = ",nuum2[1]) 
+    print("The ticket number,violation date, violation description, fine,registration number,make,model")
+    print(*ticket_desc2, sep = '\n')
+
+print(lst_of_commands)
