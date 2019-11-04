@@ -14,9 +14,9 @@
 - [x] Register a birth
 - [x] Register a marriage
 - [x] Renew a vehicle registration
-- [ ] Process a bill of sale
-- [ ] Process Payment
-- [ ] Get a driver abstract
+- [x] Process a bill of sale
+- [x] Process Payment
+- [x] Get a driver abstract
 
 ### Traffic officers
 - [x] Issue a ticket
@@ -24,7 +24,7 @@
 
 ### General
 - [x] String matching
-- [ ] Error checking
+- [x] Error checking
 - [x] Counter SQL injection attacks
 - [x] Non-visible password when typing
 
