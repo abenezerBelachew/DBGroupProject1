@@ -13,7 +13,7 @@ help_commands = ["RegBir to Register a Birth",
             "Quit to quit",]
 lst_of_commands = ["REGBIR", "REGMAR", "RENVEH", "PROBIL",
                     "PROPAY", "DRIABS", "ISUTIC", "CAROWN",
-                    "HELP", "QUIT", "ARTHURIT"]
+                    "HELP", "QUIT"]
 invalid_command = "Please type in a valid command."
 
 # Database related
@@ -31,7 +31,7 @@ all_done = "\n****************\nAll Done :)\n****************\n"
 # Login
 password_incorrect = "Password Incorrect."
 uid_not_exist = "Uid does not exist in database."
-logged_in = "You're logged in."
+logged_in = "------------------------------\nYou're logged in.\n------------------------------"
 
 # birth
 register_birth = "\n----------------------\nRegister a birth\n----------------------\n"

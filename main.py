@@ -102,21 +102,24 @@ def register_birth(database, user):
     city = user_city[0]
     regplace = city
 
-    # try:
-    c.execute("SELECT phone, address FROM persons WHERE fname = ? AND lname = ?", (m_fname, m_lname))
-    result = c.fetchone()
-    phone = result[0]
-    address = result[1]
-    # except:
-    #     print(pm.something_went_wrong, "This one")
-    #     sys.exit()
+    try:
+        c.execute("SELECT phone, address FROM persons WHERE fname = ? AND lname = ?", (m_fname, m_lname))
+        result = c.fetchone()
+        phone = result[0]
+        address = result[1]
+    except:
+        print(pm.something_went_wrong)
+        sys.exit()
     
     reg_birth_data = [regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname]
     person_data = [fname, lname, birth_date, birth_place, address, phone]
 
-    c.execute(q.insert_into_births, reg_birth_data)
-    c.execute(q.insert_into_persons, person_data)
-    
+    try:
+        c.execute(q.insert_into_births, reg_birth_data)
+        c.execute(q.insert_into_persons, person_data)
+    except:
+        print(pm.something_went_wrong)
+        sys.exit()    
      
 
 
@@ -132,60 +135,74 @@ def register_marriage(database, user):
     last name, birth date, birth place, address and phone. For each partner, any column other than the first name
     and last name can be null if it is not provided.
     """
-    regno = randrange(1001, 9867699)
-    regdate = datetime.today().strftime('%Y-%m-%d')
-    
-    c = database.cursor()
-    c.execute(q.get_user_city, (user,))
-    user_city = c.fetchone()
-    city = user_city[0]
-    regplace = city
-
-    p1_fname = str(input("Person 1 First Name: "))
-    p1_lname = str(input("Person 1 Last Name: "))
-    p2_fname = str(input("Person 2 First Name: "))
-    p2_lname = str(input("Person 2 Last Name: "))
-
-    # If partner is not found in the database, add them
-    c.execute(q.get_first_last_name, (p1_fname, p1_lname))
-    result = c.fetchall()
-    # if person1 doesn't exist in the persons database 
-    if len(result) == 0:
-        # ask the additional questions here
-        print("Please add information for person 1 to persons table by answering the ff questions.")
-        fname = str(input("First Name: "))
-        lname = str(input("Last Name: "))
-        bdate = str(input("Birth Date(YYYY-MM-DD): "))
-        bplace = str(input("Birth Place: "))
-        address = str(input("Address: "))
-        phone = str(input("Phone(XXX-XXX-XXXX): "))
-        person1_data = [fname, lname, bdate, bplace, address, phone]
-
-        # Insert into persons table
-        c.execute(q.insert_into_persons, person1_data)
+    try:
+        regno = randrange(1001, 9867699)
+        regdate = datetime.today().strftime('%Y-%m-%d')
         
-    
-    c.execute(q.get_first_last_name, (p2_fname, p2_lname))
-    result = c.fetchall()
-    if len(result) == 0:
-        # ask the additional questions here
-        print("Please add information for person 2 to persons table by answering the ff questions.")
-        fname = str(input("First Name: "))
-        lname = str(input("Last Name: "))
-        bdate = str(input("Birth Date(YYYY-MM-DD): "))
-        bplace = str(input("Birth Place: "))
-        address = str(input("Address: "))
-        phone = str(input("Phone(XXX-XXX-XXXX): "))
-        person2_data = [fname, lname, bdate, bplace, address, phone]
+        c = database.cursor()
+        c.execute(q.get_user_city, (user,))
+        user_city = c.fetchone()
+        city = user_city[0]
+        regplace = city
 
-        # Insert into persons table
-        c.execute(q.insert_into_persons, person2_data)
-    
-    
-    # Insert into marriages
-    c.execute(q.insert_into_marriages, (regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname))    
-    print(pm.all_done)
+        p1_fname = str(input("Person 1 First Name: "))
+        p1_lname = str(input("Person 1 Last Name: "))
+        p2_fname = str(input("Person 2 First Name: "))
+        p2_lname = str(input("Person 2 Last Name: "))
 
+        
+        if p1_fname == "" or p1_lname == "" or p2_fname == "" or p2_lname == "":
+            print("You must enter first name and last name of both partners.")
+            sys.exit()
+        # If partner is not found in the database, add them
+        c.execute(q.get_first_last_name, (p1_fname, p1_lname))
+        result = c.fetchall()
+        # if person1 doesn't exist in the persons database 
+        if len(result) == 0:
+            # ask the additional questions here
+            print("Please add information for person 1 to persons table by answering the ff questions.")
+            fname = str(input("First Name: "))
+            lname = str(input("Last Name: "))
+            bdate = str(input("Birth Date(YYYY-MM-DD): "))
+            bplace = str(input("Birth Place: "))
+            address = str(input("Address: "))
+            phone = str(input("Phone(XXX-XXX-XXXX): "))
+            person1_data = [fname, lname, bdate, bplace, address, phone]
+
+            if fname == "" or lname == "":
+                print("First and Last name must be provided.")
+                sys.exit()
+
+            # Insert into persons table
+            c.execute(q.insert_into_persons, person1_data)
+            
+        
+        c.execute(q.get_first_last_name, (p2_fname, p2_lname))
+        result = c.fetchall()
+        if len(result) == 0:
+            # ask the additional questions here
+            print("Please add information for person 2 to persons table by answering the ff questions.")
+            fname = str(input("First Name: "))
+            lname = str(input("Last Name: "))
+            bdate = str(input("Birth Date(YYYY-MM-DD): "))
+            bplace = str(input("Birth Place: "))
+            address = str(input("Address: "))
+            phone = str(input("Phone(XXX-XXX-XXXX): "))
+            person2_data = [fname, lname, bdate, bplace, address, phone]
+
+            if fname == "" or lname == "":
+                print("First and Last name must be provided.")
+                sys.exit()
+            # Insert into persons table
+            c.execute(q.insert_into_persons, person2_data)
+        
+        
+        # Insert into marriages
+        c.execute(q.insert_into_marriages, (regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname))    
+        print(pm.all_done)
+    except:
+        print(pm.something_went_wrong)
+        sys.exit() 
 
 def renew_registration(database, user):
     """
@@ -194,45 +211,50 @@ def renew_registration(database, user):
     the current registration either has expired or expires today. Otherwise, the system should set the
      new expiry to one year after the current expiry date.
     """
-    print(pm.renew_registration)
+    try:
+        print(pm.renew_registration)
 
-    c = database.cursor()
-    c.execute(q.get_reg_num_date)
-    reg_num_date = c.fetchall()
-    
-    # contains the registration number as keys and date as values
-    registration_dict = {}
-    for num_date in reg_num_date:
-        registration_dict[num_date[0]] = num_date[1]
+        c = database.cursor()
+        c.execute(q.get_reg_num_date)
+        reg_num_date = c.fetchall()
+        
+        # contains the registration number as keys and date as values
+        registration_dict = {}
+        for num_date in reg_num_date:
+            registration_dict[num_date[0]] = num_date[1]
 
-    reg_number = str(input("Existing registration number: "))
-    # check if reg_number exists in the database
-    if int(reg_number) in registration_dict.keys():
-        are_you_sure = str(input("Are you sure you want to renew your registration? (Y/N) ")).upper()
-        if are_you_sure == 'Y':
-            # The system should set the new expiry date to one year from today's date if 
-            # the current registration either has expired or expires today. Otherwise, the system should set the
-            # new expiry to one year after the current expiry date.
-            the_date = datetime.today().strftime('%Y-%m-%d') # 2019-11-02 str
-            todays_date = datetime.strptime(the_date, '%Y-%m-%d') # 2019-11-02 00:00:00 datetime.datetime
-            # print(registration_dict[int(reg_number)])
-            current_expiry = datetime.strptime(registration_dict[int(reg_number)], '%Y-%m-%d')
+        reg_number = str(input("Existing registration number: "))
+        # check if reg_number exists in the database
+        if int(reg_number) in registration_dict.keys():
+            are_you_sure = str(input("Are you sure you want to renew your registration? (Y/N) ")).upper()
+            if are_you_sure == 'Y':
+                # The system should set the new expiry date to one year from today's date if 
+                # the current registration either has expired or expires today. Otherwise, the system should set the
+                # new expiry to one year after the current expiry date.
+                the_date = datetime.today().strftime('%Y-%m-%d') # 2019-11-02 str
+                todays_date = datetime.strptime(the_date, '%Y-%m-%d') # 2019-11-02 00:00:00 datetime.datetime
+                # print(registration_dict[int(reg_number)])
+                current_expiry = datetime.strptime(registration_dict[int(reg_number)], '%Y-%m-%d')
 
-            # if the current expiry has passed or is today
-            if  current_expiry <= todays_date:
-                c.execute(q.update_expiry, (add_years(todays_date, 1).strftime('%Y-%m-%d'), reg_number))
+                # if the current expiry has passed or is today
+                if  current_expiry <= todays_date:
+                    c.execute(q.update_expiry, (add_years(todays_date, 1).strftime('%Y-%m-%d'), reg_number))
 
+                else:
+                    c.execute(q.update_expiry, (add_years(current_expiry, 1).strftime('%Y-%m-%d'), reg_number))
             else:
-                c.execute(q.update_expiry, (add_years(current_expiry, 1).strftime('%Y-%m-%d'), reg_number))
+                print('OK, closing down.')
+                sys.exit()
         else:
-            print('OK, closing down.')
-            sys.exit()
-    else:
-        # registration number not in database
-        print(pm.reg_num_not_in_db)
+            # registration number not in database
+            print(pm.reg_num_not_in_db)
 
-    print(pm.all_done)
-    database.commit()
+        print(pm.all_done)
+        database.commit()
+        print(pm.all_done)
+    except:
+        print(pm.something_went_wrong)
+        sys.exit() 
 
 def add_years(d, years):
     """Return a date that's `years` years after the date (or datetime)
@@ -268,48 +290,51 @@ def issue_ticket(database, user):
     the ticket should be recorded. The violation date should be set to today's date if it is not 
     provided.
     """
-    
-    # check if user is an officer
-    c = database.cursor()
-    c.execute('SELECT utype FROM users WHERE uid = ?', (user, ))
-    user_type = c.fetchone()[0]
+    try:
+        # check if user is an officer
+        c = database.cursor()
+        c.execute('SELECT utype FROM users WHERE uid = ?', (user, ))
+        user_type = c.fetchone()[0]
 
-    # If user is an officer 
-    if user_type == 'o':
-        reg_num = int(input("Registration number: "))
-        c.execute("""SELECT p.fname, p.lname, v.make, v.model, v.year, v.color FROM registrations r JOIN
-         persons p ON (r.fname, r.lname) = (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE r.regno = ?""",(reg_num,))
-        result = c.fetchone()
-        fname = result[0]
-        lname = result[1]
-        make = result[2]
-        model = result[3]
-        year = result[4]
-        color = result[5]
-        print("\n--------------------------\nInformation\n--------------------------\n")
-        print("First Name: ", fname)
-        print("Last Name: ", lname)
-        print("Make: ", make)
-        print("Model: ", model)
-        print("Year: ", year)
-        print("Color: ", color)
+        # If user is an officer 
+        if user_type == 'o':
+            reg_num = int(input("Registration number: "))
+            c.execute("""SELECT p.fname, p.lname, v.make, v.model, v.year, v.color FROM registrations r JOIN
+            persons p ON (r.fname, r.lname) = (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE r.regno = ?""",(reg_num,))
+            result = c.fetchone()
+            fname = result[0]
+            lname = result[1]
+            make = result[2]
+            model = result[3]
+            year = result[4]
+            color = result[5]
+            print("\n--------------------------\nInformation\n--------------------------\n")
+            print("First Name: ", fname)
+            print("Last Name: ", lname)
+            print("Make: ", make)
+            print("Model: ", model)
+            print("Year: ", year)
+            print("Color: ", color)
 
-        print("\n-------------------------\nTicket the registra: \n------------------------\n")
-        violation_date = str(input("Violation Date: ")) # if not provided, today's date
-        if violation_date == "":
-            violation_date = datetime.today().strftime('%Y-%m-%d')
-        violation_text = str(input("violation Text: "))
-        amount = str(input("Amount: "))
-        tno = randrange(1001, 9867699)
+            print("\n-------------------------\nTicket the registra: \n------------------------\n")
+            violation_date = str(input("Violation Date: ")) # if not provided, today's date
+            if violation_date == "":
+                violation_date = datetime.today().strftime('%Y-%m-%d')
+            violation_text = str(input("violation Text: "))
+            amount = str(input("Amount: "))
+            tno = randrange(1001, 9867699)
 
-        c.execute(q.insert_into_tickets, (tno, reg_num, amount, violation_text, violation_date))
+            c.execute(q.insert_into_tickets, (tno, reg_num, amount, violation_text, violation_date))
 
-        database.commit()
-        print(pm.all_done)
-    # if user is not an officer
-    else:
-        print(pm.for_officers_only)
-
+            database.commit()
+            print(pm.all_done)
+        # if user is not an officer
+        else:
+            print(pm.for_officers_only)
+            sys.exit()
+    except:
+        print(pm.something_went_wrong)
+        sys.exit() 
 def find_car_owner(database, user):
     """
     Find a car owner.The user should be able to look for the owner of a car by providing one or more of 
@@ -320,54 +345,67 @@ def find_car_owner(database, user):
     be shown as well as the latest registration date, the expiry date, and the name of the person listed in
     the latest registration record.
     """
-    print(pm.car_own)
-    c = database.cursor()
+    try:
+        # check if user is an officer
+        c = database.cursor()
+        c.execute('SELECT utype FROM users WHERE uid = ?', (user, ))
+        user_type = c.fetchone()[0]
 
-    make = str(input("Make: "))
-    model = str(input("Model: "))
-    year = int(input("Year: "))
-    color = str(input("Color: "))
-    plate = str(input("Plate: "))
+        # If user is an officer 
+        if user_type == 'o':
+            print(pm.car_own)
+            c = database.cursor()
 
-    c.execute("""SELECT DISTINCT p.fname, p.lname FROM persons p JOIN registrations r ON (r.fname, r.lname) = 
-    (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE v.make = ? OR v.model = ? OR v.year = ? OR v.color = ?
-    OR r.plate = ?""", (make, model, year, color, plate))
-    result = c.fetchall()
+            make = str(input("Make: "))
+            model = str(input("Model: "))
+            year = int(input("Year: "))
+            color = str(input("Color: "))
+            plate = str(input("Plate: "))
 
-    if len(result) > 4:
-        c.execute("""SELECT DISTINCT r.fname, r.lname, v.make, v.model, v.year, v.color, r.plate FROM persons p JOIN registrations r
-        ON (r.fname, r.lname) = (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE v.make = ? OR v.model = ? OR
-        v.year = ? OR v.color = ? OR r.plate = ?""", (make, model, year, color, plate))
-        result = c.fetchall()
-        for values in result:
-            print("\n-----------------------------------------")
-            print(f"Full Name: {values[0]} {values[1]}")
-            print("------------------------------------------")
-            print(f"Make: {values[2]}")
-            print(f"Model: {values[3]}")
-            print(f"Year: {values[4]}")
-            print(f"Color: {values[5]}")
-            print(f"Plate: {values[6]}")
-    elif len(result) <= 4:
-        c.execute("""SELECT DISTINCT r.fname, r.lname, v.make, v.model, v.year, v.color, r.plate, r.regdate, r.expiry FROM persons p JOIN registrations r
-        ON (r.fname, r.lname) = (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE v.make = ? OR v.model = ? OR
-        v.year = ? OR v.color = ? OR r.plate = ?""", (make, model, year, color, plate))
-        result = c.fetchall()
-        for values in result:
-            print("\n-----------------------------------------")
-            print(f"Full Name: {values[0]} {values[1]}")
-            print("------------------------------------------")
-            print(f"Make: {values[2]}")
-            print(f"Model: {values[3]}")
-            print(f"Year: {values[4]}")
-            print(f"Color: {values[5]}")
-            print(f"Plate: {values[6]}")
-            print(f'Registration Date: {values[7]}')
-            print(f"Expiry: {values[8]}")
-    
+            c.execute("""SELECT DISTINCT p.fname, p.lname FROM persons p JOIN registrations r ON (r.fname, r.lname) = 
+            (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE v.make = ? OR v.model = ? OR v.year = ? OR v.color = ?
+            OR r.plate = ?""", (make, model, year, color, plate))
+            result = c.fetchall()
 
-    print(pm.all_done)
+            if len(result) > 4:
+                c.execute("""SELECT DISTINCT r.fname, r.lname, v.make, v.model, v.year, v.color, r.plate FROM persons p JOIN registrations r
+                ON (r.fname, r.lname) = (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE v.make = ? OR v.model = ? OR
+                v.year = ? OR v.color = ? OR r.plate = ?""", (make, model, year, color, plate))
+                result = c.fetchall()
+                for values in result:
+                    print("\n-----------------------------------------")
+                    print(f"Full Name: {values[0]} {values[1]}")
+                    print("------------------------------------------")
+                    print(f"Make: {values[2]}")
+                    print(f"Model: {values[3]}")
+                    print(f"Year: {values[4]}")
+                    print(f"Color: {values[5]}")
+                    print(f"Plate: {values[6]}")
+            elif len(result) <= 4:
+                c.execute("""SELECT DISTINCT r.fname, r.lname, v.make, v.model, v.year, v.color, r.plate, r.regdate, r.expiry FROM persons p JOIN registrations r
+                ON (r.fname, r.lname) = (p.fname, p.lname) JOIN vehicles v ON r.vin = v.vin WHERE v.make = ? OR v.model = ? OR
+                v.year = ? OR v.color = ? OR r.plate = ?""", (make, model, year, color, plate))
+                result = c.fetchall()
+                for values in result:
+                    print("\n-----------------------------------------")
+                    print(f"Full Name: {values[0]} {values[1]}")
+                    print("------------------------------------------")
+                    print(f"Make: {values[2]}")
+                    print(f"Model: {values[3]}")
+                    print(f"Year: {values[4]}")
+                    print(f"Color: {values[5]}")
+                    print(f"Plate: {values[6]}")
+                    print(f'Registration Date: {values[7]}')
+                    print(f"Expiry: {values[8]}")
             
+
+            print(pm.all_done)
+        else:
+            print(pm.for_officers_only)
+            sys.exit()
+    except:
+        print(pm.something_went_wrong)
+        sys.exit() 
             
 
     
@@ -418,6 +456,7 @@ def bill_sale(database, user):
             c.execute(q.new_registrations,(regno,todaysdate,a_year_after,plate,vin,n_fname,n_lname))
         else :
             print(q.not_current_owner)  
+        print(pm.all_done)
     except:
         print(pm.something_went_wrong)
         sys.exit()
@@ -445,6 +484,7 @@ def pro_payments(database, user):
     except:
         print(pm.something_went_wrong)
         sys.exit()
+    print(pm.all_done)
 
         
 def get_abstract(database, user):
@@ -518,6 +558,7 @@ def get_abstract(database, user):
     except:
         print(pm.something_went_wrong)
         sys.exit()
+    print(pm.all_done)
         
 
 def main():
@@ -527,14 +568,15 @@ def main():
     status, active_user = login(database)
     if status:
         print(pm.logged_in)
-        print("User in main: ", active_user)
+        print("User in main: ", active_user, "\n------------------------------")
         
 
+        print("List of Commands:")
         for command in pm.help_commands:
             # list all available commands
             print(command)
        
-        command = str(input("Command: ")).upper()
+        command = str(input("\n----------\nCommand: ")).upper()
         
         # If command not in the list of commands, keep asking user
         # for a valid command.
@@ -574,7 +616,8 @@ def main():
             find_car_owner(database, active_user)
 
         elif command == "HELP":
-            print(pm.help_commands)
+            for help_command in pm.help_commands:
+                print(help_command)
     else:
         print("Not logged in.")    
 
