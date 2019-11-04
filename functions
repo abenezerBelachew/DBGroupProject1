@@ -106,9 +106,9 @@ def get_abstract(database, user):
             
             while answer.upper() == "YES" and low_index< num_of_results :
                 print("In lifetime")
-                print(ticket_desc[x:y])
+                print(ticket_desc[low_index:high_index])
                 print("In last 2 years")
-                print(ticket_desc2[x:y])
+                print(ticket_desc2[low_index:high_index])
                 low_index +=5
                 high_index += 5
                 answer = input("Do you want to see more(yes/no): ")
