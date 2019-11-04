@@ -25,7 +25,7 @@
 ### General
 - [x] String matching
 - [ ] Error checking
-- [ ] Counter SQL injection attacks
+- [x] Counter SQL injection attacks
 - [x] Non-visible password when typing
 
 
