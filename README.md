@@ -10,23 +10,23 @@
 ## Specification
 
 ### System Functionalities
-- [x] Login Screen
-- [x] Register a birth
-- [x] Register a marriage
-- [x] Renew a vehicle registration
-- [x] Process a bill of sale
-- [x] Process Payment
-- [x] Get a driver abstract
+- [x] Login Screen [Abenezer]
+- [x] Register a birth [Abenezer]
+- [x] Register a marriage [Abenezer]
+- [x] Renew a vehicle registration [Abenezer]
+- [x] Process a bill of sale [Arthur] 
+- [x] Process Payment [Arthur]
+- [x] Get a driver abstract [Arthur]
 
 ### Traffic officers
-- [x] Issue a ticket
-- [x] Find a car owner
+- [x] Issue a ticket [Abenezer, Arthur]
+- [x] Find a car owner [Abenezer]
 
 ### General
-- [x] String matching
-- [x] Error checking
-- [x] Counter SQL injection attacks
-- [x] Non-visible password when typing
+- [x] String matching [Abenezer, Arthur]
+- [x] Error checking [Abenezer, Arthur]
+- [x] Counter SQL injection attacks [Abenezer]
+- [x] Non-visible password when typing [Abenezer]
 
 
 
