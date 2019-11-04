@@ -96,28 +96,28 @@ def get_abstract(database, user):
             
             ticket_desc.append(t_desc)
             ticket_desc2.append(t_desc2)
-        x=5
-        y=9
-        a = len(ticket_desc)
+        low_index=5
+        high_index=9
+        num_of_results = len(ticket_desc)
        # print(a,'>>>>>>>>>>>>>>>>>>')
-        if a>5 :
+        if num_of_results>5 :
             pm.printmsg(tickets, nuum,ticket_desc, tickets2, nuum2, ticket_desc2)
             answer = input("Do you want to see more(yes/no): ")
             
-            while answer.upper() == "YES" and x< a :
+            while answer.upper() == "YES" and low_index< num_of_results :
                 print("In lifetime")
                 print(ticket_desc[x:y])
                 print("In last 2 years")
                 print(ticket_desc2[x:y])
-                x +=5
-                y += 5
+                low_index +=5
+                high_index += 5
                 answer = input("Do you want to see more(yes/no): ")
                 
         else:
             pm.printmsg(tickets, nuum,ticket_desc, tickets2, nuum2, ticket_desc2)
     except:
         print(pm.something_went_wrong)
-        sys.exiti()
+        sys.exit()
         
         
  def issueticket(database, user):
